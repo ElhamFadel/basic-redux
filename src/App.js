@@ -1,24 +1,25 @@
-import logo from './logo.svg';
+import Test from "./Test";
+import { BrowserRouter as Router,Route } from 'react-router-dom';
+import Home from "./Home";
+import About from "./About";
+import Navbar from "./Navbar";
+import Post from "./Post";
+import reduce from "./reducers"
+import {createStore} from "redux"
 import './App.css';
-
+const store = createStore(reduce)
 function App() {
   return (
+    <Router>
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {store.getState()}
+     <Navbar />
     </div>
+    <Route exact path="/" component={Home} />
+    <Route path="/about" component={About} />
+    <Route path="/test" component={Test} />
+    <Route path="/:id" component={Post} />
+    </Router>
   );
 }
 
