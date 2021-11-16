@@ -1,26 +1,34 @@
-import Test from "./Test";
-import { BrowserRouter as Router,Route } from 'react-router-dom';
-import Home from "./Home";
-import About from "./About";
-import Navbar from "./Navbar";
-import Post from "./Post";
-import reduce from "./reducers"
-import {createStore} from "redux"
-import './App.css';
-const store = createStore(reduce)
-function App() {
-  return (
-    <Router>
-    <div className="App">
-      {store.getState()}
-     <Navbar />
-    </div>
-    <Route exact path="/" component={Home} />
-    <Route path="/about" component={About} />
-    <Route path="/test" component={Test} />
-    <Route path="/:id" component={Post} />
-    </Router>
-  );
+import React from 'react'
+import * as creators from "./store/actions"
+import {connect} from "react-redux"
+function App({count,onIncrement,onDecrement,onIncrementAsync,onGetUser,users,loading}) {
+    return (
+        <div>
+            {count}
+            <button onClick={onIncrement}>+</button>
+            <button onClick={onDecrement}>-</button>
+            <button onClick={onIncrementAsync}>+Async</button>
+            <button onClick={onGetUser}>Fetch User</button>
+            {
+                loading?"Loading ...":users.map(user=>{
+                    return <div>{user.name}</div>
+                })
+            }
+        </div>
+    )
 }
+const mapStateToProps = (state)=>({
+    count:state.counter.counter,
+    users:state.person.users,
+    loading:state.person.loading,
+    error:state.person.error
+})
+const mapDispatchToProps = dispatch=>({
+    onIncrement:()=>dispatch(creators.increment()),
+    onDecrement:()=>dispatch(creators.decrement()),
+    onIncrementAsync:()=>dispatch(creators.incrementAsync()),
+    onGetUser:()=>dispatch(creators.fetchUsers())
+})
+export default connect(mapStateToProps,mapDispatchToProps)(App)
 
-export default App;
+
